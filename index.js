@@ -108,7 +108,7 @@ _.each(_param.items, function(endpoint) {
     // set the poll interval in case it was set too low
     var pollInterval = parseFloat(endpoint.pollInterval, 10) || 5;
     pollInterval = pollInterval * 1000; // turn into ms
-    if (pollInterval < 1000 || pollInterval > 1000) // incase the user entered the wrong units
+    if (pollInterval < 1000) // incase the user entered the wrong units
         pollInterval = 1000;
 
     endpoint.pollInterval = pollInterval;
