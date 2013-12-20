@@ -1,0 +1,70 @@
+{
+    "description" : "Polls a set of Endpoints and Reports back the Response Time",
+    "icon" : "icon.png",
+    "command" : "node index.js",
+    "postExtract" : "npm install",
+    "ignore" : "node_modules",
+
+    "metrics" : [ "HTTP_POLLTIME" ],
+
+    "paramArray" : { "itemTitle" : ["source"], "schemaTitle" : "Endpoint"},
+    "paramSchema" : [
+        {
+            "title" : "Source",
+            "name" : "source",
+            "description" : "The source to display in the legend for the endpoint. Ex. www.google.com",
+            "type" : "string",
+            "required" : true
+        },
+        {
+            "title" : "Poll Time (sec)",
+            "name" : "pollInterval",
+            "description" : "The Poll Interval to call your endpoint in seconds. Ex. 5",
+            "type" : "string",
+            "required" : true
+        },
+        {
+            "title": "Method",
+            "name": "method",
+            "description": "The Method of the endpoint",
+            "type" : { "enum" : [["GET", "GET"], ["POST", "POST"], ["PUT", "PUT"], ["DEL", "DEL"]] },
+            "required": true
+        },
+        {
+            "title": "Protocol",
+            "name": "protocol",
+            "description": "The protocol of the endpoint",
+            "type" : { "enum" : [["HTTP", "http"], ["HTTPS", "https"]]},
+            "required": true
+        },
+        {
+            "title": "URL",
+            "name": "url",
+            "description": "The URL of the endpoint.  For example, www.graphdat.com or www.graphdat.com:8080/some-random-page",
+            "type": "string",
+            "required": true
+        },
+        {
+            "title": "Username",
+            "name": "username",
+            "description": "(optional) The username required to access the endpoint",
+            "type": "string",
+            "required": false
+        },
+        {
+            "title": "Password",
+            "name": "password",
+            "description": "(optional) The password required to access the endpoint",
+            "type": "password",
+            "required": false
+        },
+        {
+            "title": "POST data",
+            "name": "postdata",
+            "description": "(optional) Additional information to pass along to the endpoint. Key Values pairs, \"key=value\" one per line",
+            "type": "array",
+            "items" : { "type" : "string" },
+            "required": false
+        }
+    ]
+}

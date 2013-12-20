@@ -1,0 +1,9 @@
+[
+	{
+		"source" : "sample URL",
+		"method": "GET",
+		"protocol" : "HTTP",
+		"url": "www.graphdat.com",
+		"pollInterval": 5000
+	}
+]
