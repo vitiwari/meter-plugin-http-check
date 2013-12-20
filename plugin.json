@@ -1,5 +1,5 @@
 {
-    "description" : "Polls a set of Endpoints and Reports back the Response Time",
+    "description" : "Polls a set of URLs and reports back the response time",
     "icon" : "icon.png",
     "command" : "node index.js",
     "postExtract" : "npm install",
