@@ -24,7 +24,8 @@ function logFailure(err, resp, body, source, debugEnabled) {
     if (debugEnabled) {
         if (err)
             console.error(err);
-        console.error('Status: ' + resp.statusCode);
+        if (resp.statusCode)
+           console.error('Status: ' + resp.statusCode);
         if (body)
             console.error(body);
     }
