@@ -46,6 +46,20 @@
             "required": true
         },
         {
+            "title": "Ignore Status Code",
+            "name": "ignoreStatusCode",
+            "description": "If any response from the server is considered valid, even an error, enable this.",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "title": "Enable Debug Output",
+            "name": "debugEnabled",
+            "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
+            "type": "boolean",
+            "default": false
+        },
+        {
             "title": "Username",
             "name": "username",
             "description": "(optional) The username required to access the endpoint",

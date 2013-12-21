@@ -6,7 +6,6 @@ var _format = require('util').format;
 var _request = require('request');
 var _tools = require('graphdat-plugin-tools');
 
-var DEBUG = false;
 var DEFAULT_TIMEOUT = 20000;
 var SITE_IS_DOWN = -1;
 
@@ -21,8 +20,8 @@ function logSuccess(source, duration) {
     console.log('HTTP_RESPONSETIME %d %s', duration, source);
 }
 
-function logFailure(err, resp, body, source) {
-    if (DEBUG) {
+function logFailure(err, resp, body, source, debugEnabled) {
+    if (debugEnabled) {
         if (err)
             console.error(err);
         console.error('Status: ' + resp.statusCode);
@@ -33,8 +32,8 @@ function logFailure(err, resp, body, source) {
 }
 
 function complete(err) {
-    if (DEBUG)
-        console.eror(err);
+    if (err)
+        console.error(err);
 }
 
 function createHttpOptions(endpoint) {
@@ -87,8 +86,10 @@ function pollEndpoint(endpoint, cb) {
     _request(endpoint.httpOptions, function (err, resp, body) {
         var end = Date.now();
         var duration = end - start;
-        if (err || resp.statusCode < 200 || resp.statusCode >= 300)
-            logFailure(err, resp, body, source);
+        if (err)
+            logFailure(err, resp, body, source, endpoint.debugEnabled);
+        else if (!endpoint.ignoreStatusCode && (resp.statusCode < 200 || resp.statusCode >= 300))
+            logFailure(err, resp, body, source, endpoint.debugEnabled);
         else
             logSuccess(source, duration);
 
