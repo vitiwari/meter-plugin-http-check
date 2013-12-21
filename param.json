@@ -1,9 +1,41 @@
-[
-	{
-		"source" : "sample URL",
-		"method": "GET",
-		"protocol" : "HTTP",
-		"url": "www.graphdat.com",
-		"pollInterval": 5000
-	}
-]
+{
+   "items": [
+      {
+         "source": "google",
+         "pollInterval": "5",
+         "method": "GET",
+         "protocol": "http",
+         "url": "www.google.com",
+         "username": "",
+         "password": "",
+         "postdata": [
+            ""
+         ]
+      },
+      {
+         "source": "microsoft",
+         "pollInterval": "5",
+         "method": "GET",
+         "protocol": "http",
+         "url": "www.microsoft.com",
+         "username": "",
+         "password": "",
+         "postdata": [
+            ""
+         ]
+      },
+      {
+         "source": "graphdat",
+         "pollInterval": "5",
+         "method": "GET",
+         "protocol": "http",
+         "url": "www.graphdat.com",
+         "username": "",
+         "password": "",
+         "postdata": [
+            ""
+         ]
+      }
+   ],
+   "pollInterval": 1000
+}

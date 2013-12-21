@@ -18,7 +18,7 @@ var _pollInterval = _param.pollInterval || 1000;
 var _previous = {};
 
 function logSuccess(source, duration) {
-    console.log('HTTP_POLLTIME %d %s', duration, source);
+    console.log('HTTP_RESPONSETIME %d %s', duration, source);
 }
 
 function logFailure(err, resp, body, source) {
@@ -29,7 +29,7 @@ function logFailure(err, resp, body, source) {
         if (body)
             console.error(body);
     }
-    console.log('HTTP_POLLTIME %d %s', SITE_IS_DOWN, source);
+    console.log('HTTP_RESPONSETIME %d %s', SITE_IS_DOWN, source);
 }
 
 function complete(err) {

@@ -5,7 +5,7 @@
     "postExtract" : "npm install",
     "ignore" : "node_modules",
 
-    "metrics" : [ "HTTP_POLLTIME" ],
+    "metrics" : [ "HTTP_RESPONSETIME" ],
 
     "paramArray" : { "itemTitle" : ["source"], "schemaTitle" : "Endpoint"},
     "paramSchema" : [
@@ -21,6 +21,7 @@
             "name" : "pollInterval",
             "description" : "The Poll Interval to call your endpoint in seconds. Ex. 5",
             "type" : "string",
+            "default" : 5,
             "required" : true
         },
         {

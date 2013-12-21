@@ -2,7 +2,7 @@
 	"name": "graphdat-httpcheck-plugin",
 	"version": "0.0.1",
 	"private": false,
-	"description": "HTTP Check plugin for Graphat to poll a URL and report back in its Response Time",
+	"description": "HTTP Check plugin for Graphat to poll a URL and report back its response time",
 	"main": "index.js",
 	"devDependencies": {},
 	"dependencies": {
