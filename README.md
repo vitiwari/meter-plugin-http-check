@@ -30,7 +30,6 @@ None
 |POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line          |
 
 ### Metrics Collected
-
 |Metric Name       |Description               |
 |:-----------------|:-------------------------|
 |HTTP Response Time|The Response time of a URL|
