@@ -1,6 +1,5 @@
 Boundary Apache HTTP Check Plugin
 ---------------------------------
-
 Polls a set of URLs and reports on the response time. The plugin allows multiple URLs to be polled and each of those URLs to set their own Poll interval.  The URLs can require authentication, the plugin supports basic authentication.
 
 ### Platforms
@@ -15,7 +14,7 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 ### Plugin Setup
 None
 
-### Plugin Configuration
+### Plugin Configuration Fields
 |Field Name         |Description                                                                                                          |
 |:------------------|:--------------------------------------------------------------------------------------------------------------------|
 |Source             |The source to display in the legend for the endpoint. Ex. www.google.com                                             |
