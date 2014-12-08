@@ -10,6 +10,7 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 
 ### Prerequisites
 - node version 0.8.0 or later
+- npm version 1.4.21 or later
 
 ### Plugin Setup
 None
