@@ -9,11 +9,13 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 | Supported |   v   |    v    |    v    |  v   |
 
 
-|  Runtime | node.js | Python | Java |
-|:---------|:-------:|:------:|:----:|
-| Required |    +    |        |      |
+|  Runtime | node.js | Python | Java | LUA |
+|:---------|:-------:|:------:|:----:|:---:|
+| Required |    +    |        |      |  +  |
 
 - [How to install node.js?](https://help.boundary.com/hc/articles/202360701)
+
+- [How to install LUA Luvit?](https://luvit.io)
 
 ### Plugin Setup
 None
