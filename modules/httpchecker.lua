@@ -190,7 +190,7 @@ function HttpCheck:request(method, protocol, url, username, password, postdata, 
 
 		req:on("error", function(err)
 		  msg = tostring(err)
-		  --print("Error while sending a request: " .. msg)
+		  process.stderr:write("Error while sending a request: " .. msg)
 		end)
 		if string.len(params['body']) > 0 then
 			req:write(params['body'])
@@ -227,7 +227,7 @@ function HttpCheck:request(method, protocol, url, username, password, postdata, 
 
 		req:on("error", function(err)
 		  msg = tostring(err)
-		  --print("Error while sending a request: " .. msg)
+		  process.stderr:write("Error while sending a request: " .. msg)
 		end)
 		if string.len(params['body']) > 0 then
 			req:write(params['body'])
