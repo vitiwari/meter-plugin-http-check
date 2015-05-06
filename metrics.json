@@ -1,0 +1,10 @@
+{
+  "HTTP_RESPONSETIME": {
+    "defaultAggregate": "MAX",
+    "defaultResolutionMS": 1000,
+    "description": "The Response time of a URL",
+    "displayName": "HTTP Response Time",
+    "displayNameShort": "http-time",
+    "unit": "duration"
+  }
+}
