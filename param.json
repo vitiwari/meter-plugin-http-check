@@ -5,7 +5,7 @@
       "pollInterval": "5",
       "method": "POST",
       "protocol": "http",
-      "url": "groups.google.com/forum/",
+      "url": "http://groups.google.com/forum/",
       "username": "",
       "password": "",
       "postdata": [
@@ -18,18 +18,18 @@
       "pollInterval": "5",
       "method": "GET",
       "protocol": "http",
-      "url": "www.microsoft.com",
+      "url": "http://www.live.com",
       "username": "",
       "password": "",
       "postdata": [
       ]
     },
     {
-      "source": "graphdat",
+      "source": "boundary",
       "pollInterval": "5",
       "method": "GET",
       "protocol": "http",
-      "url": "www.graphdat.com",
+      "url": "http://www.boundary.com",
       "username": "",
       "password": "",
       "postdata": [

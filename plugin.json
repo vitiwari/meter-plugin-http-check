@@ -1,4 +1,7 @@
 {
+  "name" : "Boundary Http Check Plugin",
+  "version" : "1.2",
+  "tags" : "http",
   "description" : "Polls a set of URLs and reports back the response time",
   "icon" : "icon.png",
   "command" : "node index.js",
