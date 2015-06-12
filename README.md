@@ -8,12 +8,12 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 |:----------|:-----:|:-------:|:-------:|:----:|
 | Supported |   v   |    v    |    v    |  v   |
 
-#### Boundary Meter Versions V4.0 Or Later
+#### Boundary Meter versions v4.2 or greater
 
-- To install new meter go to Settings->Installation or [see instructons|https://help.boundary.com/hc/en-us/sections/200634331-Installation]. 
-- To upgrade the meter to the latest version - [see instructons|https://help.boundary.com/hc/en-us/articles/201573102-Upgrading-the-Boundary-Meter].
+- To install new meter go to Settings->Installation or [see instructons](https://help.boundary.com/hc/en-us/sections/200634331-Installation).
+- To upgrade the meter to the latest version - [see instructons](https://help.boundary.com/hc/en-us/articles/201573102-Upgrading-the-Boundary-Meter).
 
-#### For Boundary Meter less than V4.0
+#### For Boundary Meter less than v4.2
 
 |  Runtime | node.js | Python | Java |
 |:---------|:-------:|:------:|:----:|
@@ -25,9 +25,7 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 
 None
 
-#### Plugin Configuration Fields
-
-#### For All Versions
+### Plugin Configuration Fields
 
 |Field Name         |Description                                                                       |
 |:------------------|:---------------------------------------------------------------------------------|
@@ -44,8 +42,14 @@ None
 
 ### Metrics Collected
 
-#### For All Versions
-
 |Metric Name       |Description               |
 |:-----------------|:-------------------------|
 |HTTP Response Time|The Response time of a URL|
+
+### Dashboards
+
+None
+
+### References
+
+None
