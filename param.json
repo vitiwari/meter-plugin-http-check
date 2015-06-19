@@ -24,7 +24,8 @@
       "password": "",
       "postdata": [
       ],
-      "ignoreStatusCode" : false 
+      "ignoreStatusCode" : false,
+      "debugEnabled" : true
     },
     {
       "source": "boundary",
