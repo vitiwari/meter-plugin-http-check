@@ -43,8 +43,8 @@ local plugin = Plugin:new(params, pollers)
 function plugin:onParseValues(_, extra)
   local result = {}
   local value = tonumber(extra.response_time) 
-  if not isHttpSuccess(extra.status_code) then
-    self:printError(('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, self.source, ('HTTP Request Returned %d instead of OK'):format(extra.status_code))
+  if not extra.info.ignoreStatusCode and not isHttpSuccess(extra.status_code) then
+    self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, self.source, ('HTTP Request Returned %d instead of OK'):format(extra.status_code))
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
   end

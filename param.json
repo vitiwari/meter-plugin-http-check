@@ -23,7 +23,8 @@
       "username": "",
       "password": "",
       "postdata": [
-      ]
+      ],
+      "ignoreStatusCode" : false 
     },
     {
       "source": "boundary",
@@ -34,7 +35,8 @@
       "username": "",
       "password": "",
       "postdata": [
-      ]
+      ],
+      "ignoreStatusCode" : true
     }
   ],
   "pollInterval": 1000
