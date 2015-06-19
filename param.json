@@ -13,8 +13,7 @@
       "postdata": [
         "key1=1",
         "key2=2"
-      ],
-      "ignoreStatusCode" : true
+      ]
     },
     {
       "source": "microsoft",
@@ -27,9 +26,7 @@
       "username": "",
       "password": "",
       "postdata": [
-      ],
-      "ignoreStatusCode" : false,
-      "debugEnabled" : true
+      ]
     },
     {
       "source": "boundary",
@@ -42,8 +39,7 @@
       "username": "",
       "password": "",
       "postdata": [
-      ],
-      "ignoreStatusCode" : true
+      ]
     }
   ],
   "pollInterval": 1000
