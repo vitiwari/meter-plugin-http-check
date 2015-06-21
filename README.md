@@ -1,6 +1,4 @@
-# Boundary HTTP Check Plugin
-
-Polls a set of URLs and reports on the response time. The plugin allows multiple URLs to be polled and each of those URLs to set their own Poll interval. The URLs can require authentication, the plugin supports basic HTTP authentication.
+Polls a set of URLs and reports on the response time.The plugin allows multiple URLs to be polled and each of those URLs to set their own Poll interval. The URLs can require authentication, the plugin supports basic HTTP authentication.
 
 ### Prerequisites
 
@@ -8,12 +6,12 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 |:----------|:-----:|:-------:|:-------:|:----:|
 | Supported |   v   |    v    |    v    |  v   |
 
-#### Boundary Meter versions v4.2 or greater
+#### Boundary Meter versions v4.2 or later 
 
-- To install new meter go to Settings->Installation or [see instructons](https://help.boundary.com/hc/en-us/sections/200634331-Installation).
-- To upgrade the meter to the latest version - [see instructons](https://help.boundary.com/hc/en-us/articles/201573102-Upgrading-the-Boundary-Meter).
+- To install new meter go to Settings->Installation or [see instructions](https://help.boundary.com/hc/en-us/sections/200634331-Installation).
+- To upgrade the meter to the latest version - [see instructions](https://help.boundary.com/hc/en-us/articles/201573102-Upgrading-the-Boundary-Meter).
 
-#### For Boundary Meter less than v4.2
+#### For Boundary Meter earlier than v4.2
 
 |  Runtime | node.js | Python | Java |
 |:---------|:-------:|:------:|:----:|
@@ -25,20 +23,20 @@ Polls a set of URLs and reports on the response time. The plugin allows multiple
 
 None
 
-### Plugin Configuration Fields
+#### Plugin Configuration Fields
 
-|Field Name         |Description                                                                       |
-|:------------------|:---------------------------------------------------------------------------------|
-|Source             |The source to display in the legend for the endpoint. Ex. www.google.com          |
-|Poll Time (sec)    |The Poll Interval to call your endpoint in seconds. Ex. 5                         |
-|Method             |The Method of the endpoint                                                        |
-|Protocol           |The protocol of the endpoint                                                      |
-|URL                |The URL of the endpoint. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page  |
-|Ignore Status Code |If any response from the server is considered valid, even an error, enable this.  |
+|Field Name         |Description                                                                                                           |
+|:------------------|:---------------------------------------------------------------------------------------------------------------------|
+|Source             |The source to display in the legend for the endpoint. Ex. www.google.com                                              |
+|Poll Time (sec)    |The Poll Interval to call your endpoint in seconds. Ex. 5                                                             |
+|Method             |The Method of the endpoint                                                                                            |
+|Protocol           |The protocol of the endpoint                                                                                          |
+|URL                |The URL of the endpoint. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page                            |
+|Ignore Status Code |If any response from the server is considered valid, even an error, enable this.                                      |
 |Enable Debug Output|If you are having issues with the plugin, you can enable additional debugging output to be shown in the Meter console |
-|Username           |(optional) The username required to access the endpoint                           |
-|Password           |(optional) The password required to access the endpoint                           |
-|POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line |
+|Username           |(optional) The username required to access the endpoint                                                               |
+|Password           |(optional) The password required to access the endpoint                                                               |
+|POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line           |
 
 ### Metrics Collected
 

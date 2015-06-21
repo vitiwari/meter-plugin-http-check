@@ -5,7 +5,9 @@
       "pollInterval": "5",
       "method": "POST",
       "protocol": "http",
-      "url": "http://groups.google.com/forum/",
+      "url": "groups.google.com/forum/",
+      "ignoreStatusCode": true,
+      "debugEnabled": true,
       "username": "",
       "password": "",
       "postdata": [
@@ -19,7 +21,9 @@
       "pollInterval": "5",
       "method": "GET",
       "protocol": "http",
-      "url": "http://www.live.com",
+      "url": "www.live.com",
+      "ignoreStatusCode": true,
+      "debugEnabled": true,
       "username": "",
       "password": "",
       "postdata": [
@@ -32,7 +36,9 @@
       "pollInterval": "5",
       "method": "GET",
       "protocol": "http",
-      "url": "http://www.boundary.com",
+      "url": "www.boundary.com",
+      "ignoreStatusCode": true,
+      "debugEnabled": true,
       "username": "",
       "password": "",
       "postdata": [
