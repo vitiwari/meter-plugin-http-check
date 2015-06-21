@@ -1,6 +1,6 @@
 {
   "name" : "Boundary Http Check Plugin",
-  "version" : "0.9.0",
+  "version" : "0.9.1",
   "meterVersionRequired" : "4.2.0-611",
   "os" : [ "Linux", "Windows", "SmartOS", "OS X" ],
   "tags" : "http",
@@ -14,7 +14,7 @@
 
   "metrics" : [ "HTTP_RESPONSETIME" ],
 
-  "paramArray" : { "itemTitle" : ["source"], "schemaTitle" : "Endpoint"},
+  "paramArray" : { "itemTitle" : ["source", "url"], "schemaTitle" : "Endpoint"},
   "paramSchema" : [
     {
       "title" : "Source",
@@ -24,10 +24,10 @@
       "required" : true
     },
     {
-      "title" : "Poll Time (sec)",
+      "title" : "Poll Interval (sec)",
       "name" : "pollInterval",
-      "description" : "The Poll Interval to call your endpoint in seconds. Ex. 5",
-      "type" : "string",
+      "description" : "The Poll Interval (in seconds) to call your endpoint. Ex. 5",
+      "type" : "integer",
       "default" : 5,
       "required" : true
     },
