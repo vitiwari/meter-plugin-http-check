@@ -6,7 +6,6 @@ local PollerCollection = framework.PollerCollection
 local url = require('url')
 local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
-
 local auth = framework.util.auth
 
 local params = framework.params
@@ -15,14 +14,12 @@ local function createPollers(params)
   local pollers = PollerCollection:new() 
 
   for _,item in pairs(params.items) do
-
     local options = url.parse(item.url)
     options.protocol = options.protocol or item.protocol or 'http'
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
     options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
     options.data = item.postdata
-
     options.wait_for_end = false
 
     local data_source = WebRequestDataSource:new(options)
