@@ -2,7 +2,7 @@
   "name" : "Boundary Http Check Plugin",
   "version" : "0.9.1",
   "meterVersionRequired" : "4.2.0-611",
-  "os" : [ "Linux", "Windows", "SmartOS", "OS X" ],
+  "unsupportedPlatforms" : [ ],
   "tags" : "http",
   "description" : "Polls a set of URLs and reports back the response time",
   "icon" : "icon.png",
