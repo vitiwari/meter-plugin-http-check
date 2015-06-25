@@ -1,3 +1,17 @@
+-- Copyright 2015 Boundary, Inc.
+--
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+--
+--    http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+
 local framework = require('framework.lua')
 local Plugin = framework.Plugin
 local DataSourcePoller = framework.DataSourcePoller
@@ -6,7 +20,6 @@ local PollerCollection = framework.PollerCollection
 local url = require('url')
 local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
-
 local auth = framework.util.auth
 
 local params = framework.params
@@ -15,14 +28,12 @@ local function createPollers(params)
   local pollers = PollerCollection:new() 
 
   for _,item in pairs(params.items) do
-
     local options = url.parse(item.url)
     options.protocol = options.protocol or item.protocol or 'http'
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
     options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
     options.data = item.postdata
-
     options.wait_for_end = false
 
     local data_source = WebRequestDataSource:new(options)
@@ -60,3 +71,4 @@ function plugin:onParseValues(body, extra)
   return result
 end
 plugin:run()
+
