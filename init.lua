@@ -24,12 +24,19 @@ local auth = framework.util.auth
 
 local params = framework.params
 
+local SITE_IS_DOWN = -1
+
 local function createPollers(params) 
   local pollers = PollerCollection:new() 
 
   for _,item in pairs(params.items) do
+    -- prefix with selected protocol
+    local chunk, protocol = item.url:match("^(([a-z0-9+]+)://)")
+    item.url = item.url:sub((chunk and #chunk or 0) + 1) 
+    local protocol = item.protocol or 'http'
+    item.url = protocol .. '://' .. item.url 
+
     local options = url.parse(item.url)
-    options.protocol = options.protocol or item.protocol or 'http'
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
     options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
@@ -64,6 +71,7 @@ function plugin:onParseValues(body, extra)
       logFailure(extra.info.source .. ' status code: ' .. extra.status_code .. '\n')
       logFailure(extra.info.source .. ' body:\n' .. tostring(body) .. '\n')
     end
+    result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
   end

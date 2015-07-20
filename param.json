@@ -1,49 +1,17 @@
 {
   "items": [
     {
-      "source": "groups.google.com/forum/",
-      "pollInterval": "5",
-      "method": "POST",
-      "protocol": "http",
-      "url": "groups.google.com/forum/",
-      "ignoreStatusCode": true,
-      "debugEnabled": true,
-      "username": "",
-      "password": "",
-      "postdata": [
-        "key1=1",
-        "key2=2"
-      ],
-      "ignoreStatusCode" : true
-    },
-    {
-      "source": "microsoft",
-      "pollInterval": "5",
-      "method": "GET",
-      "protocol": "http",
-      "url": "www.live.com",
-      "ignoreStatusCode": true,
-      "debugEnabled": true,
-      "username": "",
-      "password": "",
-      "postdata": [
-      ],
-      "ignoreStatusCode" : false,
-      "debugEnabled" : true
-    },
-    {
       "source": "boundary",
       "pollInterval": "5",
       "method": "GET",
       "protocol": "http",
-      "url": "www.boundary.com",
-      "ignoreStatusCode": true,
-      "debugEnabled": true,
+      "url": "https://www.boundary.com/test",
+      "ignoreStatusCode": false,
+      "debugEnabled": false,
       "username": "",
       "password": "",
       "postdata": [
-      ],
-      "ignoreStatusCode" : true
+      ]
     }
   ],
   "pollInterval": 1000
