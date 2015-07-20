@@ -14,6 +14,13 @@
 
   "metrics" : [ "HTTP_RESPONSETIME" ],
 
+  "dashboards" : [
+     {
+     "name" : "HTTP Check",
+     "layout" : "d-w=1&d-h=1&d-pad=5&d-bg=none&d-g-HTTP_RESPONSETIME=0-0-1-1"
+     }
+  ],
+
   "paramArray" : { "itemTitle" : ["source", "url"], "schemaTitle" : "Endpoint"},
   "paramSchema" : [
     {
