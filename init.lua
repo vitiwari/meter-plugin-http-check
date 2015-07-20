@@ -30,8 +30,13 @@ local function createPollers(params)
   local pollers = PollerCollection:new() 
 
   for _,item in pairs(params.items) do
+    -- prefix with selected protocol
+    local chunk, protocol = item.url:match("^(([a-z0-9+]+)://)")
+    item.url = item.url:sub((chunk and #chunk or 0) + 1) 
+    local protocol = item.protocol or 'http'
+    item.url = protocol .. '://' .. item.url 
+
     local options = url.parse(item.url)
-    options.protocol = options.protocol or item.protocol or 'http'
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
     options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
