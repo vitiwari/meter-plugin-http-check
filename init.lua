@@ -24,6 +24,8 @@ local auth = framework.util.auth
 
 local params = framework.params
 
+local SITE_IS_DOWN = -1
+
 local function createPollers(params) 
   local pollers = PollerCollection:new() 
 
@@ -64,6 +66,7 @@ function plugin:onParseValues(body, extra)
       logFailure(extra.info.source .. ' status code: ' .. extra.status_code .. '\n')
       logFailure(extra.info.source .. ' body:\n' .. tostring(body) .. '\n')
     end
+    result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
   end
