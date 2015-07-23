@@ -2,11 +2,11 @@
   "items": [
     {
       "source": "boundary",
-      "pollInterval": "5",
+      "pollInterval": 1,
       "method": "GET",
       "protocol": "http",
       "url": "https://www.boundary.com/test",
-      "ignoreStatusCode": false,
+      "ignoreStatusCode": true,
       "debugEnabled": false,
       "username": "",
       "password": "",
