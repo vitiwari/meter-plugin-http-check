@@ -66,7 +66,7 @@ function plugin:onParseValues(body, extra)
   local result = {}
   local value = tonumber(extra.response_time) 
   if not extra.info.ignoreStatusCode and not isHttpSuccess(extra.status_code) then
-    self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, extra.info.source, ('HTTP Request Returned %d instead of OK'):format(extra.status_code))
+    self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, extra.info.source, ('HTTP request returned %d for URL %s'):format(extra.status_code, extra.context.options.href))
     if (extra.info.debugEnabled) then
       logFailure(extra.info.source .. ' status code: ' .. extra.status_code .. '\n')
       logFailure(extra.info.source .. ' body:\n' .. tostring(body) .. '\n')
