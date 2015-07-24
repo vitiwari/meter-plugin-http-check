@@ -62,6 +62,14 @@ local function logFailure(str)
 end
 
 local plugin = Plugin:new(params, pollers)
+function plugin:onError(err)
+  if err.context then
+    err.source = err.context.info.source
+    err.message = err.message and err.message .. ' for ' .. err.context.options.href   
+  end
+  return err
+end
+
 function plugin:onParseValues(body, extra)
   local result = {}
   local value = tonumber(extra.response_time) 
