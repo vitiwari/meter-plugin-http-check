@@ -21,6 +21,7 @@ local url = require('url')
 local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
 local auth = framework.util.auth
+local trim = framework.string.trim
 
 local params = framework.params
 
@@ -31,6 +32,7 @@ local function createPollers(params)
 
   for _,item in pairs(params.items) do
     -- prefix with selected protocol
+    item.url = trim(item.url)
     local chunk, protocol = item.url:match("^(([a-z0-9+]+)://)")
     item.url = item.url:sub((chunk and #chunk or 0) + 1) 
     local protocol = item.protocol or 'http'
