@@ -46,7 +46,9 @@ None
 
 ### Dashboards
 
-None
+|Dashboard Name|Metrics Displayed       |
+|:-------------|:-----------------------|
+|HTTP Check    |HTTP Response Time|
 
 ### References
 

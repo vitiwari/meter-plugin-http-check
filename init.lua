@@ -21,15 +21,24 @@ local url = require('url')
 local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
 local auth = framework.util.auth
+local trim = framework.string.trim
 
 local params = framework.params
+
+local SITE_IS_DOWN = -1
 
 local function createPollers(params) 
   local pollers = PollerCollection:new() 
 
   for _,item in pairs(params.items) do
+    -- prefix with selected protocol
+    item.url = trim(item.url)
+    local chunk, protocol = item.url:match("^(([a-z0-9+]+)://)")
+    item.url = item.url:sub((chunk and #chunk or 0) + 1) 
+    local protocol = item.protocol or 'http'
+    item.url = protocol .. '://' .. item.url 
+
     local options = url.parse(item.url)
-    options.protocol = options.protocol or item.protocol or 'http'
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
     options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
@@ -55,15 +64,24 @@ local function logFailure(str)
 end
 
 local plugin = Plugin:new(params, pollers)
+function plugin:onError(err)
+  if err.context then
+    err.source = err.context.info.source
+    err.message = err.message and err.message .. ' for ' .. err.context.options.href   
+  end
+  return err
+end
+
 function plugin:onParseValues(body, extra)
   local result = {}
   local value = tonumber(extra.response_time) 
   if not extra.info.ignoreStatusCode and not isHttpSuccess(extra.status_code) then
-    self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, self.source, ('HTTP Request Returned %d instead of OK'):format(extra.status_code))
+    self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, extra.info.source, ('HTTP request returned %d for URL %s'):format(extra.status_code, extra.context.options.href))
     if (extra.info.debugEnabled) then
       logFailure(extra.info.source .. ' status code: ' .. extra.status_code .. '\n')
       logFailure(extra.info.source .. ' body:\n' .. tostring(body) .. '\n')
     end
+    result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
   end

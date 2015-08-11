@@ -1,6 +1,6 @@
 {
   "name" : "Boundary Http Check Plugin",
-  "version" : "0.9.1",
+  "version" : "0.9.2",
   "meterVersionRequired" : "4.2.0-611",
   "unsupportedPlatforms" : [ ],
   "tags" : "http",
@@ -13,6 +13,13 @@
   "ignore" : "node_modules",
 
   "metrics" : [ "HTTP_RESPONSETIME" ],
+
+  "dashboards" : [
+     {
+     "name" : "HTTP Check",
+     "layout" : "d-w=1&d-h=1&d-pad=5&d-bg=none&d-g-HTTP_RESPONSETIME=0-0-1-1"
+     }
+  ],
 
   "paramArray" : { "itemTitle" : ["source", "url"], "schemaTitle" : "Endpoint"},
   "paramSchema" : [
