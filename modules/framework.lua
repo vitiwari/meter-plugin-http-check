@@ -117,7 +117,6 @@ function framework.util.parseUrl(url, parseQueryString)
     host = host,
     hostname = hostname,
     port = port,
-    path = path or '/',
     pathname = pathname or '/',
     search = search,
     query = query,
