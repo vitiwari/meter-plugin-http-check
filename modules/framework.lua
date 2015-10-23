@@ -41,6 +41,7 @@ local querystring = require('querystring')
 local boundary = require('boundary')
 local io = require('io')
 local hrtime = require('uv').Process.hrtime
+local utils = require('utils')
 
 local callable = function (class, func)
   class.meta.__call = func 
@@ -74,6 +75,19 @@ Logger.INFO = 20
 Logger.DEBUG = 10
 Logger.NOTSET = 0
 
+Logger.level_map = {
+  critical = Logger.CRITICAL,
+  error = Logger.ERROR,
+  warning = Logger.WARNING,
+  info = Logger.INFO,
+  debug = Logger.DEBUG,
+  notset = Logger.NOTSET
+}
+
+function Logger.parseLevel(level)
+  return tonumber(level) or Logger.level_map[level] or Logger.NOTSET
+end
+
 function Logger:initialize(stream, level)
   self.out = stream
   self.levels = {}
@@ -93,55 +107,63 @@ function Logger:setLevel(level)
   self.level = level or Logger.NOTSET
 end
 
-function Logger:write(level_string, message)
-  local formatted = ('%s: %s\n'):format(level_string, message)
+function Logger:dump(args)
+  return args and utils.dump(args, nil, true) or ''
+end
+
+function Logger:write(level_string, message, args)
+  local formatted = ('%s:\t%s %s\n'):format(level_string, message, self:dump(args))
   self.out:write(formatted)
 end
 
-function Logger:info(message)
+function Logger:info(message, args)
   if self:isEnabledFor(Logger.INFO) then
-    self:write('INFO', message) 
+    self:write('INFO', message, args) 
   end
 end
 
-function Logger:warning(message)
+function Logger:warning(message, args)
   if self:isEnabledFor(Logger.WARNING) then
-    self:write('WARNING', message)
+    self:write('WARNING', message, args)
   end
 end
 
-function Logger:debug(message)
+function Logger:debug(message, args)
   if self:isEnabledFor(Logger.DEBUG) then
-    self:write('DEBUG', message)
+    self:write('DEBUG', message, args)
   end
 end
 
-function Logger:error(message)
+function Logger:error(message, args)
   if self:isEnabledFor(Logger.ERROR) then
-    self:write('ERROR', message)
+    self:write('ERROR', message, args)
   end
 end
 
-function Logger:critical(message)
+function Logger:critical(message, args)
   if self:isEnabledFor(Logger.CRITICAL) then
-    self:write('CRITICAL', message)
+    self:write('CRITICAL', message, args)
   end
 end
 
-function Logger:exception(message)
+function Logger:exception(message, args)
   if self:isEnabledFor(Logger.ERROR) then
-    self:write('ERROR', message)   
+    self:write('ERROR', message, args)   
   end
 end
 
-function Logger:log(level, message)
+function Logger:log(level, message, args)
   local func = self[level]
   if func and self:isEnabledFor(level) then
-    func(message)
+    func(message, args)
   end
 end
 
 framework.Logger = Logger
+
+local function getDefaultLogger(level)
+  return Logger:new(process.stderr, Logger.parseLevel(level))
+end
 
 do
   local encode_alphabet = {
@@ -1477,6 +1499,7 @@ function WebRequestDataSource:initialize(params)
 
   self.options = options
   self.info = options.meta
+  self.logger = getDefaultLogger(params.debug_level)
 end
 
 function WebRequestDataSource:onError(...)
@@ -1485,6 +1508,7 @@ end
 
 --- Fetch data from the initialized url
 function WebRequestDataSource:fetch(context, callback, params)
+  self.logger:info('WebRequestDataSource:fetch()')
   assert(callback, 'WebRequestDataSource:fetch: callback is required')
 
   local start_time = hrtime()
@@ -1504,6 +1528,7 @@ function WebRequestDataSource:fetch(context, callback, params)
       res:on('end', function ()
         local exec_time = hrtime() - start_time
         success, error = pcall(function () 
+          self.log('WebRequestDataSource:fetch() - Got response as', { status_code = res.statusCode, body = buffer })
           self:processResult(context, callback, buffer, {context = self, info = self.info, response_time = exec_time, status_code = res.statusCode}) end)
         if not success then
           self:emit('error', error)
@@ -1515,6 +1540,7 @@ function WebRequestDataSource:fetch(context, callback, params)
         local exec_time = hrtime() - start_time
         buffer = buffer .. data
         if not self.wait_for_end then
+          self.logger:debug('WebRequestDataSource:fetch() - Got response as', { status_code = res.statusCode, body = buffer } )
           self:processResult(context, callback, buffer, {context = self, info = self.info, response_time = exec_time, status_code = res.statusCode})
           res:destroy()
         end
@@ -1547,12 +1573,15 @@ function WebRequestDataSource:fetch(context, callback, params)
   local req
   options.protocol = notEmpty(options.protocol, 'http')
   if string.lower(options.protocol) == 'https' then
+    self.logger:debug('WebRequestDataSource:fetch() - Sending an HTTPS request using', options)
     req = https.request(options, success)
   else
+    self.logger:debug('WebRequestDataSource:fetch() - Sending an HTTP request using', options)
     req = http.request(options, success)
   end
 
   if body and #body > 0 then
+    self.logger:debug('WebRequestDataSource:fetch() - Sending data inside for body as', body)
     req:write(body)
   end
 
