@@ -67,11 +67,12 @@
       "default": false
     },
     {
-      "title": "Enable Debug Output",
-      "name": "debugEnabled",
+      "title": "Debugging Level",
+      "name": "debug_level",
       "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
-      "type": "boolean",
-      "default": false
+      "type": { "enum" : [["CRITICAL", "critical"], ["ERROR", "error"], ["WARNING", "warning"], ["INFO", "info"], ["DEBUG", "debug"], ["NOTSET", "notset"]] },
+      "default": "notset",
+      "required" : true
     },
     {
       "title": "Username",
