@@ -25,7 +25,7 @@ None
 |Protocol           |The protocol of the endpoint                                                                                          |
 |URL                |The URL of the endpoint. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page                            |
 |Ignore Status Code |If any response from the server is considered valid, even an error, enable this.                                      |
-|Enable Debug Output|If you are having issues with the plugin, you can enable additional debugging output to be shown in the Meter console |
+|Debug Level | If you are having issues with the plugin, you can enable additional debugging output to be shown in the Meter console |
 |Username           |(optional) The username required to access the endpoint                                                               |
 |Password           |(optional) The password required to access the endpoint                                                               |
 |POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line           |

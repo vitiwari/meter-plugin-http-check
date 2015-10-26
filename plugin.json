@@ -1,6 +1,6 @@
 {
   "name" : "Boundary Http Check Plugin",
-  "version" : "0.9.3",
+  "version" : "0.9.4",
   "meterVersionRequired" : "4.2.0-611",
   "unsupportedPlatforms" : [ ],
   "tags" : "http",
@@ -67,11 +67,12 @@
       "default": false
     },
     {
-      "title": "Enable Debug Output",
-      "name": "debugEnabled",
+      "title": "Debug Level",
+      "name": "debug_level",
       "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
-      "type": "boolean",
-      "default": false
+      "type": { "enum" : [["CRITICAL", "critical"], ["ERROR", "error"], ["WARNING", "warning"], ["INFO", "info"], ["DEBUG", "debug"], ["NOTSET", "notset"]] },
+      "default": "notset",
+      "required" : true
     },
     {
       "title": "Username",

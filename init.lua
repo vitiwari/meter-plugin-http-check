@@ -41,8 +41,9 @@ local function createPollers(params)
     local options = url.parse(item.url)
     options.auth = options.auth or auth(item.username, item.password)
     options.method = item.method
-    options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode, debugEnabled = item.debugEnabled }
+    options.meta = { source = item.source, ignoreStatusCode = item.ignoreStatusCode }
     options.data = item.postdata
+    options.debug_level = item.debug_level
     options.wait_for_end = false
 
     local data_source = WebRequestDataSource:new(options)
@@ -59,10 +60,6 @@ end
 
 local pollers = createPollers(params)
 
-local function logFailure(str)
-  process.stderr:write(str)  
-end
-
 local plugin = Plugin:new(params, pollers)
 function plugin:onError(err)
   if err.context then
@@ -77,10 +74,6 @@ function plugin:onParseValues(body, extra)
   local value = tonumber(extra.response_time) 
   if not extra.info.ignoreStatusCode and not isHttpSuccess(extra.status_code) then
     self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, extra.info.source, ('HTTP request returned %d for URL %s'):format(extra.status_code, extra.context.options.href))
-    if (extra.info.debugEnabled) then
-      logFailure(extra.info.source .. ' status code: ' .. extra.status_code .. '\n')
-      logFailure(extra.info.source .. ' body:\n' .. tostring(body) .. '\n')
-    end
     result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
