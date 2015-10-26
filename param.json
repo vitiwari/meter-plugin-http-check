@@ -7,7 +7,7 @@
       "protocol": "https",
       "url": "   https://www.facebook.com",
       "ignoreStatusCode": false,
-      "debugEnabled": false,
+      "debug_level": "info",
       "username": "",
       "password": "",
       "postdata": [
