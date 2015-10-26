@@ -45,6 +45,8 @@ local function createPollers(params)
     options.data = item.postdata
     options.debug_level = item.debug_level
     options.wait_for_end = false
+    options.follow_redirects = item.follow_redirects
+    options.max_redirects = item.max_redirects
 
     local data_source = WebRequestDataSource:new(options)
 

@@ -29,7 +29,8 @@ None
 |Username           |(optional) The username required to access the endpoint                                                               |
 |Password           |(optional) The password required to access the endpoint                                                               |
 |POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line           |
-
+| Follow Redirects | Follow redirection of 3xx responses. |
+| Max Redirects | Max numbers of redirections to follow. |
 ### Metrics Collected
 
 |Metric Name       |Description               |

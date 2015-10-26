@@ -66,15 +66,7 @@
       "type": "boolean",
       "default": false
     },
-    {
-      "title": "Debug Level",
-      "name": "debug_level",
-      "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
-      "type": { "enum" : [["CRITICAL", "critical"], ["ERROR", "error"], ["WARNING", "warning"], ["INFO", "info"], ["DEBUG", "debug"], ["NOTSET", "notset"]] },
-      "default": "notset",
-      "required" : true
-    },
-    {
+   {
       "title": "Username",
       "name": "username",
       "description": "(optional) The username required to access the endpoint",
@@ -95,6 +87,30 @@
       "type": "array",
       "items" : { "type" : "string" },
       "required": false
+    },
+    {
+      "title": "Follow Redirects",
+      "name": "follow_redirects",
+      "description": "Follow redirections on 3xx responses.",
+      "type": "boolean",
+      "default" : true,
+      "required": true
+    },
+    {
+      "title": "Max Redirects",
+      "name": "max_redirects",
+      "description": "Max redirections allowed.",
+      "type": "integer",
+      "default" : 5,
+      "required": false
+    },
+    {
+      "title": "Debug Level",
+      "name": "debug_level",
+      "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
+      "type": { "enum" : [["CRITICAL", "critical"], ["ERROR", "error"], ["WARNING", "warning"], ["INFO", "info"], ["DEBUG", "debug"], ["NOTSET", "notset"]] },
+      "default": "notset",
+      "required" : true
     }
   ]
 }
