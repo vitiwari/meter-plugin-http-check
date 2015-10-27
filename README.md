@@ -14,13 +14,13 @@ The HTTP plugin has an option to generate an error event if the return HTTP resp
 |Expected Response |Allow Direct|Max Redirect|Measurement|Usage|
 |:----------------:|:----------:|:----------:|:---------|:---|
 |2XX|False|Any|Returns response time from request if response is 2XX otherwise returns a measurement value of -1 .|Measurement of 2XX response|
-|2XX|True | Any| Redirects up to _Max Redirect_. if response is other than 2XX returns a measurement value of -1 and raises an error event.|Measurement of 2XX response|
-|3XX|True|Any| Redirects up to _Max Redirect_. if response is other than 3XX returns a measurement value of -1 and raises an error event.|Checks that there are at least _Max Redirect_ redirects|
+|2XX|True | Any| Redirects up to _Max Redirect_. if response is other than 2XX returns a measurement value of -1 and optionally raises an error event.|Measurement of 2XX response|
 |3XX| False | Any| Returns response time from request if response is 3XX otherwise returns a measurement value of -1 .|Measures 3XX response time|
+|3XX|True|Any| Redirects up to _Max Redirect_. if response is other than 3XX returns a measurement value of -1 and raises an error event.|Checks that there are at least _Max Redirect_ redirects|
 |4XX| False | Any|Returns response time from request if response is 4XX otherwise returns a measurement value of -1 .|Measurement of 4XX response |
 |4XX| True | Any|Redirects up to _Max Redirect_. if response is other than 4XX returns a measurement value of -1 and raises an error event.|Checks and endpoint for 4XX response code |
-|5XX| Any | Any|Returns response time from request if response is 5XX otherwise returns a measurement value of -1 .|Measurement of 5XX response |
-|5XX| Any | Any|Redirects up to Max Redirect. if response is other than 5XX returns a measurement value of -1 and raises an error event.|Checks and endpoint for 5XX response code|
+|5XX| False | Any|Returns response time from request if response is 5XX otherwise returns a measurement value of -1 .|Measurement of 5XX response |
+|5XX| True | Any|Redirects up to Max Redirect. if response is other than 5XX returns a measurement value of -1 and raises an error event.|Checks and endpoint for 5XX response code|
 
 ### Prerequisites
 
