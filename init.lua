@@ -45,6 +45,8 @@ local function createPollers(params)
     options.data = item.postdata
     options.debug_level = item.debug_level
     options.wait_for_end = false
+    options.follow_redirects = item.follow_redirects
+    options.max_redirects = item.max_redirects
 
     local data_source = WebRequestDataSource:new(options)
 
@@ -74,6 +76,8 @@ function plugin:onParseValues(body, extra)
   local value = tonumber(extra.response_time) 
   if not extra.info.ignoreStatusCode and not isHttpSuccess(extra.status_code) then
     self:emitEvent('error', ('%s Returned %d'):format(extra.info.source, extra.status_code), self.source, extra.info.source, ('HTTP request returned %d for URL %s'):format(extra.status_code, extra.context.options.href))
+    result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
+  elseif extra.max_redirects_reached then
     result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
