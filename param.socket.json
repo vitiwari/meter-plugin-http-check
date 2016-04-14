@@ -1,0 +1,50 @@
+{
+  "items": [
+    {
+      "source": "host_not_found",
+      "pollInterval": 1,
+      "method": "GET",
+      "protocol": "http",
+      "url": "mywebsite.down.the.road.com:8000/hello",
+      "ignoreStatusCode": false,
+      "debug_level": "notset",
+      "follow_redirects": true,
+      "max_redirects" : 0,
+      "username": "",
+      "password": "",
+      "postdata": [
+      ]
+    },
+    {
+      "source": "no_response",
+      "pollInterval": 1,
+      "method": "GET",
+      "protocol": "http",
+      "url": "localhost:8001/hello",
+      "ignoreStatusCode": false,
+      "debug_level": "notset",
+      "follow_redirects": true,
+      "max_redirects" : 0,
+      "username": "",
+      "password": "",
+      "postdata": [
+      ]
+    },
+    {
+      "source": "connection_refused",
+      "pollInterval": 1,
+      "method": "GET",
+      "protocol": "http",
+      "url": "localhost:10000/hello",
+      "ignoreStatusCode": false,
+      "debug_level": "notset",
+      "follow_redirects": true,
+      "max_redirects" : 0,
+      "username": "",
+      "password": "",
+      "postdata": [
+      ]
+    }
+  ],
+  "pollInterval": 1000
+}
