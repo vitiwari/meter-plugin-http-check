@@ -68,6 +68,10 @@ function plugin:onError(err)
     err.source = err.context.info.source
     err.message = err.message and err.message .. ' for ' .. err.context.options.href   
   end
+  result = {}
+  result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
+  self:report(result)
+
   return err
 end
 

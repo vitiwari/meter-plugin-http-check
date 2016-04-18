@@ -1,6 +1,6 @@
 {
   "name" : "Boundary Http Check Plugin",
-  "version" : "0.9.4",
+  "version" : "0.9.5",
   "meterVersionRequired" : "4.2.0-611",
   "unsupportedPlatforms" : [ ],
   "tags" : "http",
