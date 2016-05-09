@@ -29,6 +29,8 @@ None
 |Protocol           |The protocol of the endpoint. Either _http_ or _https_.                                                                                           |
 |URL                |The host and path name. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page                             |
 |Debug Level | If you are having issues with the plugin, you can enable additional debugging output to be shown in the Meter console.|
+|Follow Redirects |Follow redirections on 3xx responses|
+|Max Redirects           |Max redirections allowed                                                               |
 |Username           |(optional) The username required to access the endpoint                                                               |
 |Password           |(optional) The password required to access the endpoint                                                               |
 |POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line           |
