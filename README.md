@@ -27,11 +27,11 @@ None
 |Poll Time (sec)    |The Poll Interval to call your endpoint in seconds. Default is 5 seconds.                                                             |
 |Method             |The Method of the endpoint. One of the following: _DELETE_, _GET_, _POST_, or _PUT_.                                                                                           |
 |Protocol           |The protocol of the endpoint. Either _http_ or _https_.                                                                                           |
-|URL                |The host and path name. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page                            |
-|Follow Redirects   | Follow redirections on 3xx responses Max redirections allowed
-    |
-|Max Redirects      |Specify maximum number of redirection attempts before returning response time
-                |
+|URL                |The host and path name. For example, www.yahoo.com or www.yahoo.com:8080/some-random-page                             |
+|Follow Redirects   |Follow redirections on 3xx responses Max redirections allowed.
+     |
+|Max Redirects      |Specify maximum number of redirection attempts before returning response time.
+     |
 |Debug Level | If you are having issues with the plugin, you can enable additional debugging output to be shown in the Meter console.|
 |Username           |(optional) The username required to access the endpoint                                                               |
 |Password           |(optional) The password required to access the endpoint                                                               |
