@@ -34,7 +34,7 @@ None
 |Username           |(optional) The username required to access the endpoint                                                               |
 |Password           |(optional) The password required to access the endpoint                                                               |
 |POST data          |(optional) Additional information to pass along to the endpoint. Key Values pairs, "key=value" one per line           |
-|Ignore Status Code |Ignoring for response status code           |
+|Ignore Status Code |If any response from the server is considered valid, even an error, enable this.           |
 
 ### Metrics Collected
 
