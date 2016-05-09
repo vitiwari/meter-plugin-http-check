@@ -1,5 +1,5 @@
 {
-  "name" : "Boundary Http Check Plugin",
+  "name" : "TrueSight Pulse Http Check Plugin",
   "version" : "0.9.5",
   "meterVersionRequired" : "4.2.0-611",
   "unsupportedPlatforms" : [ ],
