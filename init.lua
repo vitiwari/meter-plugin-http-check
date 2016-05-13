@@ -22,7 +22,6 @@ local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
 local auth = framework.util.auth
 local trim = framework.string.trim
-
 local params = framework.params
 
 local SITE_IS_DOWN = -1
@@ -69,7 +68,13 @@ function plugin:onError(err)
     err.message = err.message and err.message .. ' for ' .. err.context.options.href   
   end
   result = {}
-  result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
+ 
+  if "Max redirects reached!" == err then
+     --checking condition for Max redirects reached 
+  else
+     result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
+  end
+	--  result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
   self:report(result)
 
   return err
