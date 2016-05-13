@@ -22,7 +22,6 @@ local notEmpty = framework.string.notEmpty
 local isHttpSuccess = framework.util.isHttpSuccess
 local auth = framework.util.auth
 local trim = framework.string.trim
-
 local params = framework.params
 
 local SITE_IS_DOWN = -1
