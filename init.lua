@@ -70,7 +70,7 @@ function plugin:onError(err)
   result = {}
  
   if "Max redirects reached!" == err then
-     result['HTTP_RESPONSETIME'] = {value = -1, source = err}
+     --checking condition for Max redirects reached 
   else
      result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
   end
