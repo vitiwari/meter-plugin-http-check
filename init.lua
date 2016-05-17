@@ -69,10 +69,13 @@ function plugin:onError(err)
     err.message = err.message and err.message .. ' for ' .. err.context.options.href   
   end
   result = {}
-  result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
+  if "Max redirects reached!" == err then
+     --checking condition for Max redirects reached 
+  else
+     result['HTTP_RESPONSETIME'] = {value = -1, source = err.context.info.source}
+  end
   self:report(result)
-
-  return err
+  return err  
 end
 
 function plugin:onParseValues(body, extra)

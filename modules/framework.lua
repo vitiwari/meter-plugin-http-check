@@ -1586,7 +1586,9 @@ function WebRequestDataSource:fetch(context, callback, params)
     local handleResponse = function (res)
       if self.follow_redirects and isHttpRedirect(res.statusCode) then
         if max_redirects > 0 then
-          local location = res.headers.location
+          local source = options.href
+          local relative = res.headers.location
+          local location = _url.resolve(source,relative)
           local location_opts = _url.parse(location)
           local opts = {}
           opts.method = options.method
