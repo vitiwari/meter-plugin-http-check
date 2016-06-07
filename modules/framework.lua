@@ -83,7 +83,7 @@ Logger.level_map = {
   debug = Logger.DEBUG,
   notset = Logger.NOTSET
 }
-
+framework.meterVersion=''
 function Logger.parseLevel(level)
   return tonumber(level) or Logger.level_map[level] or Logger.NOTSET
 end
@@ -1508,7 +1508,9 @@ function WebRequestDataSource:initialize(params)
   self.info = options.meta
   self.follow_redirects = options.follow_redirects
   self.max_redirects = options.max_redirects or 5
-  self.logger = getDefaultLogger(params.debug_level)
+  self.logger = getDefaultLogger(params.debug_level) 
+  framework.MeterDataSource:getMeterVersion(9192,"127.0.0.1")
+  print(framework.meterVersion) 
 end
 
 function WebRequestDataSource:onError(...)
@@ -1579,17 +1581,24 @@ function WebRequestDataSource:fetch(context, callback, params)
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     options.headers['Content-Length'] = #body
   end
-
+ 
   local max_redirects = self.max_redirects or 5
   local request
   request = function (options, callback, max_redirects)
     local handleResponse = function (res)
       if self.follow_redirects and isHttpRedirect(res.statusCode) then
         if max_redirects > 0 then
-          local source = options.href
-          local relative = res.headers.location
-          local location = _url.resolve(source,relative)
-          local location_opts = _url.parse(location)
+          local location
+          local location_opts
+          if framework.meterVersion>='4.3.1-698' then 
+	  	local source = options.href
+          	local relative = res.headers.location
+          	location = _url.resolve(source,relative)
+          	location_opts = _url.parse(location)
+          else
+          	location = res.headers.location
+          	location_opts = _url.parse(location)
+          end
           local opts = {}
           opts.method = options.method
           opts.data = options.data
@@ -1778,6 +1787,28 @@ function FileReaderDataSource:fetch(context, func, params)
       func(result)
     end
   end
+end
+function MeterDataSource:getDiscoveryCommand()
+ params = params or { match = ''}
+ return '{"jsonrpc":"2.0","method":"discovery","id":1,"params":' .. json.stringify(params) .. '}\n'
+end
+function MeterDataSource:getMeterVestionValues(data)
+  --local meterVersion=data.result.meterVersion
+  --local values = split(data.result.meterVersion, "-")
+  --framework.meterVersion = values[1]
+    framework.meterVersion = data.result.meterVersion
+end
+
+function MeterDataSource:getMeterVersion(port,host)
+ local socket = net.createConnection(port, host, callback)
+ local params = {}
+ local meterDiscoveryData = ''
+ socket:write(framework.MeterDataSource:getDiscoveryCommand())
+ socket:once('data',function(data)
+  local sucess,  parsed = parseJson(data)
+  framework.MeterDataSource:getMeterVestionValues(parsed)
+  socket:destroy()
+end)
 end
 
 framework.FileReaderDataSource = FileReaderDataSource
