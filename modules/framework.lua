@@ -1509,8 +1509,7 @@ function WebRequestDataSource:initialize(params)
   self.follow_redirects = options.follow_redirects
   self.max_redirects = options.max_redirects or 5
   self.logger = getDefaultLogger(params.debug_level) 
-  framework.MeterDataSource:getMeterVersion(9192,"127.0.0.1")
-  print(framework.meterVersion) 
+  framework.MeterDataSource:getMeterVersion(9192,"127.0.0.1") 
 end
 
 function WebRequestDataSource:onError(...)
@@ -1792,10 +1791,7 @@ function MeterDataSource:getDiscoveryCommand()
  params = params or { match = ''}
  return '{"jsonrpc":"2.0","method":"discovery","id":1,"params":' .. json.stringify(params) .. '}\n'
 end
-function MeterDataSource:getMeterVestionValues(data)
-  --local meterVersion=data.result.meterVersion
-  --local values = split(data.result.meterVersion, "-")
-  --framework.meterVersion = values[1]
+function MeterDataSource:getMeterVersionValues(data)
     framework.meterVersion = data.result.meterVersion
 end
 
@@ -1806,7 +1802,7 @@ function MeterDataSource:getMeterVersion(port,host)
  socket:write(framework.MeterDataSource:getDiscoveryCommand())
  socket:once('data',function(data)
   local sucess,  parsed = parseJson(data)
-  framework.MeterDataSource:getMeterVestionValues(parsed)
+  framework.MeterDataSource:getMeterVersionValues(parsed)
   socket:destroy()
 end)
 end
