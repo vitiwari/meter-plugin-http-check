@@ -23,11 +23,16 @@ local isHttpSuccess = framework.util.isHttpSuccess
 local auth = framework.util.auth
 local trim = framework.string.trim
 
+local json = require('json')
 local env = require('env')
+
 local params = env.get("TSP_PLUGIN_PARAMS")
 if(params == nil or  params == '') then
    params = framework.params
+else
+   params = json.parse(params)
 end
+
 local SITE_IS_DOWN = -1
 
 local function createPollers(params) 
