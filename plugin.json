@@ -1,6 +1,6 @@
 {
   "name" : "TrueSight Pulse Http Check Plugin",
-  "version" : "0.9.9",
+  "version" : "0.10.0",
   "meterVersionRequired" : "4.2.0-611",
   "unsupportedPlatforms" : [ ],
   "tags" : "http",
@@ -11,7 +11,7 @@
   "command_lua" : "boundary-meter init.lua",
   "postExtract_lua" : "",
   "ignore" : "node_modules",
-
+  "secure": true,
   "metrics" : [ "HTTP_RESPONSETIME" ],
 
   "dashboards" : [
