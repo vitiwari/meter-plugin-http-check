@@ -94,6 +94,8 @@ function plugin:onParseValues(body, extra)
     result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   elseif extra.max_redirects_reached then
     result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
+  elseif extra.status_code == 500 then
+    result['HTTP_RESPONSETIME'] = {value = SITE_IS_DOWN, source = extra.info.source}
   else
     result['HTTP_RESPONSETIME'] = {value = value, source = extra.info.source} 
   end

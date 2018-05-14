@@ -1,7 +1,7 @@
 {
   "name" : "TrueSight Pulse Http Check Plugin",
   "version" : "0.10.0",
-  "meterVersionRequired" : "4.2.0-611",
+  "meterVersionRequired" : "4.2.0-612",
   "unsupportedPlatforms" : [ ],
   "tags" : "http",
   "description" : "Polls a set of URLs and reports back the response time",
