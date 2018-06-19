@@ -54,7 +54,7 @@ local factory = function (class)
   end
 end
 
-framework.version = '0.9.15'
+framework.version = '0.10.1'
 framework.boundary = boundary
 framework.params = boundary.param or json.parse(fs.readFileSync('param.json')) or {}
 framework.plugin_params = boundary.plugin or json.parse(fs.readFileSync('plugin.json')) or {}
@@ -66,6 +66,29 @@ framework.functional = {}
 framework.table = {}
 framework.util = {}
 framework.http = {}
+
+local EventTracker = Object:extend()
+function EventTracker:initialize(delay)
+  self.delay = delay or 5 * 60
+  self.events = {}
+end
+
+function EventTracker:hash(event)
+  return string.format("%s_%s_%s", event.type, event.msg, event.source)
+end
+
+function EventTracker:track(event)
+  local hash = self:hash(event)
+  local time = os.time() + self.delay 
+  self.events[hash] = time  
+end
+
+function EventTracker:canEmit(event, time)
+  local hash = self:hash(event)
+  local next_time = self.events[hash]
+  local result = (not next_time) or next_time <= time
+  return result
+end
 
 local Logger = Object:extend()
 Logger.CRITICAL = 50
@@ -83,7 +106,7 @@ Logger.level_map = {
   debug = Logger.DEBUG,
   notset = Logger.NOTSET
 }
-framework.meterVersion=''
+
 function Logger.parseLevel(level)
   return tonumber(level) or Logger.level_map[level] or Logger.NOTSET
 end
@@ -105,6 +128,10 @@ end
 
 function Logger:setLevel(level)
   self.level = level or Logger.NOTSET
+end
+
+function Logger:getLevel()
+  return self.level
 end
 
 function Logger:dump(args)
@@ -1044,12 +1071,13 @@ end
 -- @param context Context information, this can be the caller or another object that you want to set.
 -- @param callback A function that will be called when the fetch operation is done. If there are another DataSource chained, this call will be made when the ultimate DataSource in the chain is done.
 -- @param params Additional parameters that will be send to the internal DataSource functioan.
-function DataSource:fetch(context, callback, params)
+function DataSource:fetch(context, callback, finishedCallback, params )
 
-  self:onFetch(context, callback, params)
+  self:onFetch(context, callback, finishedCallback, params)
 
   local result = self.func(params)
   self:processResult(context, callback, result)
+  finishedCallback();
 end
 
 function DataSource:processResult(context, callback, ...)
@@ -1090,7 +1118,7 @@ function CachedDataSource:initialize(ds, refresh_by)
 end
 
 --- Fetch from the provided DataSource or return the cached value
-function CachedDataSource:fetch(context, callback, params)
+function CachedDataSource:fetch(context, callback, finishedCallback, params)
   local now = os.time()
   if not self.expiration or (now >= self.expiration and self.refresh_by) then
     self.expiration = now + (self.refresh_by or 0)
@@ -1098,7 +1126,7 @@ function CachedDataSource:fetch(context, callback, params)
       self.cached = result
       self:processResult(context, callback, result)
     end
-    self.ds:fetch(context, cache, params)
+    self.ds:fetch(context, cache, finishedCallback, params);
   else
     self:processResult(context, callback, self.cached)
   end
@@ -1126,7 +1154,7 @@ end
 --- Fetch data from the configured host and port
 -- @param context A context object that can be used by the fetch operation.
 -- @func callback A callback that gets called when there is some data on the socket.
-function NetDataSource:fetch(context, callback)
+function NetDataSource:fetch(context, callback,finishedCallback)
   self:connect(function ()
     self:onFetch(self.socket)
     if callback then
@@ -1135,11 +1163,13 @@ function NetDataSource:fetch(context, callback)
         if self.close_connection then
           self:disconnect()
         end
+        finishedCallback();
       end)
     else
       if self.close_connection then
         self:disconnect()
       end
+      finishedCallback();
     end
   end)
 end
@@ -1184,12 +1214,13 @@ end
 
 function DataSourcePoller:_poll(callback)
   local success, err = pcall(function () 
-    self.dataSource:fetch(self, callback)
+    self.dataSource:fetch(self, callback,function()
+	    timer.setTimeout(self.pollInterval, function () self:_poll(callback) end)
+	  end)
   end)
   if not success then
     self:emit('error', err) 
   end
-  timer.setTimeout(self.pollInterval, function () self:_poll(callback) end)
 end
 
 --- Start polling for data.
@@ -1245,6 +1276,8 @@ function Plugin:initialize(params, dataSource)
     self.tags = notEmpty(params.tags, '')
   end
 
+  self.event_tracker = EventTracker:new()
+
   self:on('error', function (err) self:error(err) end)
   self:on('info', function (obj) self:info(obj) end)
 end
@@ -1266,11 +1299,23 @@ function Plugin:printCritical(title, host, source, msg)
 end
 
 function Plugin.formatMessage(name, version, title, host, source, msg)
-  if title and title ~= "" then title = '-'..title else title = "" end
+  local ver = '';
+  local nm ='';
+  if name and name ~= "" then
+    nm = name;
+  end
+  if version and version ~= "" then
+    ver = ' version '..version
+  end
+  if (nm == '' and ver == '') then
+    if title and title ~= "" then title = title else title = "" end
+  else
+    if title and title ~= "" then title = '-'..title else title = "" end
+  end
   if msg and msg ~= "" then msg = '|m:'..msg else msg = "" end
   if host and host ~= "" then host = '|h:'..host else host = "" end
   if source and source ~= "" then source = '|s:'..source else source = "" end
-  return string.format('%s version %s%s%s%s%s', name, version, title, msg, host, source)
+  return string.format('%s%s%s%s%s%s', nm, ver, title, msg, host, source)
 end
 
 function Plugin.formatTags(tags)
@@ -1306,10 +1351,15 @@ function Plugin:handleEvent(eventType, obj)
     msg = tostring(obj)
   end
   local source = obj.source or self.source
-  if eventType == 'error' then
-    self:printError(self.source .. ' Error', self.source, source, msg)
-  else
-    self:printInfo(self.source .. ' Info', self.source, source, msg)
+  
+  local event = {type = eventType, source = source, msg = msg}
+  if self.event_tracker:canEmit(event, os.time()) then
+    self.event_tracker:track(event)
+    if eventType == 'error' then
+      self:printError(self.source .. ' Error', self.source, source, msg)
+    else
+      self:printInfo(self.source .. ' Info', self.source, source, msg)
+    end
   end
 end
 
@@ -1321,6 +1371,7 @@ function Plugin:error(obj)
 end
 
 function Plugin:info(obj)
+  
   self:handleEvent('info', obj)
 end
 
@@ -1479,6 +1530,7 @@ end
 -- @func callback a callback function that will be passed to the DataSourcePollers.
 function PollerCollection:run(callback)
   if self.running then
+  
     return
   end
 
@@ -1508,8 +1560,7 @@ function WebRequestDataSource:initialize(params)
   self.info = options.meta
   self.follow_redirects = options.follow_redirects
   self.max_redirects = options.max_redirects or 5
-  self.logger = getDefaultLogger(params.debug_level) 
-  framework.MeterDataSource:getMeterVersion(9192,"127.0.0.1") 
+  self.logger = getDefaultLogger(params.debug_level)
 end
 
 function WebRequestDataSource:onError(...)
@@ -1518,7 +1569,7 @@ end
 
 --- Fetch data from the initialized url
 local isHttpRedirect = framework.util.isHttpRedirect
-function WebRequestDataSource:fetch(context, callback, params)
+function WebRequestDataSource:fetch(context, callback, finishedCallback, params)
   self.logger:info('WebRequestDataSource:fetch()')
   assert(callback, 'WebRequestDataSource:fetch: callback is required')
 
@@ -1545,6 +1596,7 @@ function WebRequestDataSource:fetch(context, callback, params)
           self:emit('error', error)
         end
         res:destroy()
+        finishedCallback()
       end)
     else
       res:once('data', function (data)
@@ -1554,6 +1606,7 @@ function WebRequestDataSource:fetch(context, callback, params)
           self.logger:debug('WebRequestDataSource:fetch() - Got response as', { headers = res.headers, status_code = res.statusCode, body = buffer } )
           self:processResult(context, callback, buffer, {context = self, info = self.info, response_time = exec_time, status_code = res.statusCode, max_redirects_reached = max_redirects_reached})
           res:destroy()
+          finishedCallback()
         end
       end)
     end
@@ -1580,24 +1633,15 @@ function WebRequestDataSource:fetch(context, callback, params)
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     options.headers['Content-Length'] = #body
   end
- 
+
   local max_redirects = self.max_redirects or 5
   local request
   request = function (options, callback, max_redirects)
     local handleResponse = function (res)
       if self.follow_redirects and isHttpRedirect(res.statusCode) then
         if max_redirects > 0 then
-          local location
-          local location_opts
-          if framework.meterVersion>='4.3.1-698' then 
-	  	local source = options.href
-          	local relative = res.headers.location
-          	location = _url.resolve(source,relative)
-          	location_opts = _url.parse(location)
-          else
-          	location = res.headers.location
-          	location_opts = _url.parse(location)
-          end
+          local location = res.headers.location
+          local location_opts = _url.parse(location)
           local opts = {}
           opts.method = options.method
           opts.data = options.data
@@ -1626,8 +1670,9 @@ function WebRequestDataSource:fetch(context, callback, params)
     end
 
     req:propagate('error', self, function (err)
-      err.context = self
-      err.params = params
+      --err.context = self
+      --err.params = params
+      err = err .. "(" .. options.host  .. ":" ..  options.port .. ")"
       return err
     end)
     req:done()
@@ -1738,7 +1783,7 @@ function MeterDataSource:initialize(host, port)
   NetDataSource.initialize(self, host, port)
 end
 
-function MeterDataSource:fetch(context, callback)
+function MeterDataSource:fetch(context, callback, finishedCallback)
   local parse = function (value)
     local success, parsed = parseJson(value)
     if not success then
@@ -1760,7 +1805,7 @@ function MeterDataSource:fetch(context, callback)
     end
     callback(result)
   end
-  NetDataSource.fetch(self, context, parse)
+  NetDataSource.fetch(self, context, parse, finishedCallback)
 end
 
 --- Returns a json formatted string for query a metric
@@ -1775,36 +1820,18 @@ function FileReaderDataSource:initialize(path)
   self.path = path 
 end
 
-function FileReaderDataSource:fetch(context, func, params)
+function FileReaderDataSource:fetch(context, func, finishedCallback, params)
   if not fs.existsSync(self.path) then
     self:emit('error', 'The "' .. self.path .. '" was not found.')
   else 
     local success, result = pcall(fs.readFileSync, self.path)
-	  if not success then
+    if not success then
       self:emit('error', failure)
     else
       func(result)
     end
+    finishedCallback();
   end
-end
-function MeterDataSource:getDiscoveryCommand()
- params = params or { match = ''}
- return '{"jsonrpc":"2.0","method":"discovery","id":1,"params":' .. json.stringify(params) .. '}\n'
-end
-function MeterDataSource:getMeterVersionValues(data)
-    framework.meterVersion = data.result.meterVersion
-end
-
-function MeterDataSource:getMeterVersion(port,host)
- local socket = net.createConnection(port, host, callback)
- local params = {}
- local meterDiscoveryData = ''
- socket:write(framework.MeterDataSource:getDiscoveryCommand())
- socket:once('data',function(data)
-  local sucess,  parsed = parseJson(data)
-  framework.MeterDataSource:getMeterVersionValues(parsed)
-  socket:destroy()
-end)
 end
 
 framework.FileReaderDataSource = FileReaderDataSource
@@ -1816,5 +1843,3 @@ framework.PollerCollection = PollerCollection
 framework.MeterDataSource = MeterDataSource
 
 return framework
-
-
