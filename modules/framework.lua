@@ -1070,14 +1070,14 @@ end
 --- Fetch data from the datasource. This is an abstract method.
 -- @param context Context information, this can be the caller or another object that you want to set.
 -- @param callback A function that will be called when the fetch operation is done. If there are another DataSource chained, this call will be made when the ultimate DataSource in the chain is done.
+-- @param finishedCallback A function that should be call 
 -- @param params Additional parameters that will be send to the internal DataSource functioan.
-function DataSource:fetch(context, callback, finishedCallback, params )
+function DataSource:fetch(context, callback, params )
 
-  self:onFetch(context, callback, finishedCallback, params)
+  self:onFetch(context, callback, params)
 
   local result = self.func(params)
   self:processResult(context, callback, result)
-  finishedCallback();
 end
 
 function DataSource:processResult(context, callback, ...)
@@ -1118,7 +1118,7 @@ function CachedDataSource:initialize(ds, refresh_by)
 end
 
 --- Fetch from the provided DataSource or return the cached value
-function CachedDataSource:fetch(context, callback, finishedCallback, params)
+function CachedDataSource:fetch(context, callback, params)
   local now = os.time()
   if not self.expiration or (now >= self.expiration and self.refresh_by) then
     self.expiration = now + (self.refresh_by or 0)
@@ -1126,7 +1126,7 @@ function CachedDataSource:fetch(context, callback, finishedCallback, params)
       self.cached = result
       self:processResult(context, callback, result)
     end
-    self.ds:fetch(context, cache, finishedCallback, params);
+    self.ds:fetch(context, cache, params);
   else
     self:processResult(context, callback, self.cached)
   end
@@ -1154,7 +1154,7 @@ end
 --- Fetch data from the configured host and port
 -- @param context A context object that can be used by the fetch operation.
 -- @func callback A callback that gets called when there is some data on the socket.
-function NetDataSource:fetch(context, callback,finishedCallback)
+function NetDataSource:fetch(context, callback)
   self:connect(function ()
     self:onFetch(self.socket)
     if callback then
@@ -1163,13 +1163,11 @@ function NetDataSource:fetch(context, callback,finishedCallback)
         if self.close_connection then
           self:disconnect()
         end
-        finishedCallback();
       end)
     else
       if self.close_connection then
         self:disconnect()
       end
-      finishedCallback();
     end
   end)
 end
@@ -1214,7 +1212,8 @@ end
 
 function DataSourcePoller:_poll(callback)
   local success, err = pcall(function () 
-    self.dataSource:fetch(self, callback,function()
+    self.dataSource:fetch(self, function(...)
+      callback(...)
 	    timer.setTimeout(self.pollInterval, function () self:_poll(callback) end)
 	  end)
   end)
@@ -1569,7 +1568,7 @@ end
 
 --- Fetch data from the initialized url
 local isHttpRedirect = framework.util.isHttpRedirect
-function WebRequestDataSource:fetch(context, callback, finishedCallback, params)
+function WebRequestDataSource:fetch(context, callback, params)
   self.logger:info('WebRequestDataSource:fetch()')
   assert(callback, 'WebRequestDataSource:fetch: callback is required')
 
@@ -1596,7 +1595,6 @@ function WebRequestDataSource:fetch(context, callback, finishedCallback, params)
           self:emit('error', error)
         end
         res:destroy()
-        finishedCallback()
       end)
     else
       res:once('data', function (data)
@@ -1606,7 +1604,6 @@ function WebRequestDataSource:fetch(context, callback, finishedCallback, params)
           self.logger:debug('WebRequestDataSource:fetch() - Got response as', { headers = res.headers, status_code = res.statusCode, body = buffer } )
           self:processResult(context, callback, buffer, {context = self, info = self.info, response_time = exec_time, status_code = res.statusCode, max_redirects_reached = max_redirects_reached})
           res:destroy()
-          finishedCallback()
         end
       end)
     end
@@ -1783,7 +1780,7 @@ function MeterDataSource:initialize(host, port)
   NetDataSource.initialize(self, host, port)
 end
 
-function MeterDataSource:fetch(context, callback, finishedCallback)
+function MeterDataSource:fetch(context, callback)
   local parse = function (value)
     local success, parsed = parseJson(value)
     if not success then
@@ -1805,7 +1802,7 @@ function MeterDataSource:fetch(context, callback, finishedCallback)
     end
     callback(result)
   end
-  NetDataSource.fetch(self, context, parse, finishedCallback)
+  NetDataSource.fetch(self, context, parse)
 end
 
 --- Returns a json formatted string for query a metric
@@ -1820,7 +1817,7 @@ function FileReaderDataSource:initialize(path)
   self.path = path 
 end
 
-function FileReaderDataSource:fetch(context, func, finishedCallback, params)
+function FileReaderDataSource:fetch(context, func, params)
   if not fs.existsSync(self.path) then
     self:emit('error', 'The "' .. self.path .. '" was not found.')
   else 
@@ -1830,7 +1827,6 @@ function FileReaderDataSource:fetch(context, func, finishedCallback, params)
     else
       func(result)
     end
-    finishedCallback();
   end
 end
 
